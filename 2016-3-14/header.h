@@ -22,4 +22,5 @@ int* add_binary(int *A, int *B, int n);
 int binary_search(int *A, int p,int r, int key);//递归
 int binary_search_2(int *A, int p, int r, int key);//迭代
 int binary_search_3(int *A, int p, int r, int key);//迭代，查找最后一个比key小的数
-Result *find_maximum_subarray(int *A, int low, int high);
+Result *find_maximum_subarray(int *A, int low, int high);//递归 O(nlogn)
+Result *find_maximum_subarray_2(int *A, int low, int high);//非递归O(n)

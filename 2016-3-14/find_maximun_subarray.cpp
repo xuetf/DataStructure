@@ -51,13 +51,49 @@ Result *find_maximum_subarray(int *A, int low, int high) {
 	}
 }
 
+Result *find_maximum_subarray_2(int *A, int low, int high) {
+	int n = high - low + 1;
+	Result *suffixes = (Result*)malloc(sizeof(Result)*(n+low));//suffixes[i]存储以A[i]结尾的A[1..i]的最大连续和,浪费前面几个空间
+	if (suffixes == NULL)
+		exit(-1);
+	//初始化
+	suffixes[low].low = low;
+	suffixes[low].high = low;
+	suffixes[low].sum = A[low];
+	//遍历一遍
+	for (int i = low + 1; i <= high; i++) {
+		if (suffixes[i - 1].sum < 0) {
+			suffixes[i].low = i;
+			suffixes[i].high = i;
+			suffixes[i].sum = A[i];
+		}
+		else {
+			suffixes[i].low = suffixes[i - 1].low;
+			suffixes[i].high = i;
+			suffixes[i].sum = suffixes[i - 1].sum + A[i];
+		}
+	}
+	Result *max = &suffixes[low];
+	for (int i = low + 1; i <= high; i++) {
+		if (suffixes[i].sum > max->sum)
+			max = &suffixes[i];
+	}
+	return max;
+}
 
-# if 0
+
+# if 1
 int main(){
 	int A[ARRAY_SIZE] = { NONE, 2, -3, -1, 6, -5, 0, 2, -3, 10, 7 };
 	int B[ARRAY_SIZE] = { NONE, -2, -3, -1, -6, -5, -3, -2, -3, -10, -7 };//全部负数
 	int C[ARRAY_SIZE] = { NONE, 2, 3, 1, 6, 5, 3, 2, 3, 10, 7 };//全部正数
-	Result *r = find_maximum_subarray(C, 1, MAX);
+	Result *r = find_maximum_subarray(A, 1, MAX);
+	printf("max sum=%d,low=%d,high=%d\n", r->sum, r->low, r->high);
+	r = find_maximum_subarray_2(A, 1, MAX);
+	printf("max sum=%d,low=%d,high=%d\n", r->sum, r->low, r->high);
+	r = find_maximum_subarray_2(B, 1, MAX);
+	printf("max sum=%d,low=%d,high=%d\n", r->sum, r->low, r->high);
+	r = find_maximum_subarray_2(C, 1, MAX);
 	printf("max sum=%d,low=%d,high=%d\n",r->sum,r->low,r->high);
 	getchar();
 
